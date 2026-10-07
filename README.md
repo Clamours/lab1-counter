@@ -5,13 +5,15 @@
 
 ## 1. 小组成员与分工
 
-| 姓名 | 学号 | Git 身份（user.name / user.email） | 实际分工 |
-| --- | --- | --- | --- |
-| （组长）XXX | XXXXXXXX | xxx / xxx@example.com | Compose 编排、README、验收记录汇总 |
-| XXX | XXXXXXXX | xxx / xxx@example.com | 后端 API 与数据库初始化 |
-| XXX | XXXXXXXX | xxx / xxx@example.com | 前端页面与 Nginx 反向代理 |
+| 姓名 | 学号 | 实际分工 |
+| --- | --- | --- |
+| 李铭轩 | 25213050231 | 组长；CodeArts 仓库、Compose 编排、README |
+| 黄帅 | 26113050269 | 数据库建表与初始化、数据持久化 |
+| 胥振培 | 24210240351 | 后端 API 与后端镜像 |
+| 刘腾飞 | 26213050283 | 前端页面与 Nginx 反向代理 |
+| 肖楠 | 26213050405 | 测试验收、截图与验收记录 |
 
-组号：XX　联系助教：XXX
+组号：第29组　联系助教：袁子诚
 
 ## 2. 技术栈
 
@@ -20,8 +22,6 @@
 | `frontend` | 原生 HTML + JavaScript，Nginx 提供静态页面并反向代理 `/api` | 基于 `nginx:1.27.3-alpine` 构建 |
 | `backend` | Node.js 20 + Express 4 + node-postgres (`pg`) | 基于 `node:20.18-alpine3.20` 构建 |
 | `db` | PostgreSQL 16 | `postgres:16.4-alpine` |
-
-所有镜像均标注具体版本，未使用 `latest`。
 
 ## 3. 目录结构
 
@@ -72,14 +72,11 @@ lab1-counter/
 - **backend**：提供 REST API，执行计数逻辑并读写数据库。启动时等待数据库可连接（最多重试 30 次，每次间隔 2 秒），然后执行 `database/init.sql` 自动建表并初始化。
 - **db**：保存计数数据，数据目录 `/var/lib/postgresql/data` 挂载到命名卷，只在 Compose 内部网络暴露端口。
 
-启动顺序：`db` 健康检查（`pg_isready`）通过 → 启动 `backend`；`backend` 健康检查（`/api/health`）通过 → 启动 `frontend`。
-
 ## 5. 环境要求
 
 - Docker Engine 24+（已在 Docker 29.4.0 上验证）
 - Docker Compose v2.17+（需要支持 `additional_contexts`；已在 v5.1.2 上验证）
 - 宿主机端口 `8088` 空闲（可在 `.env` 中修改）
-- 首次构建需要能从 Docker Hub 和 npm 源拉取镜像与依赖
 
 ## 6. 环境变量
 
@@ -111,7 +108,7 @@ docker compose up -d --build    # 构建并启动全部服务
 docker compose ps -a            # 查看状态，三个服务都应为 Up (healthy)
 ```
 
-浏览器访问：**<http://localhost:8088>**（修改 `FRONTEND_PORT` 后，把端口换成对应的值）
+浏览器访问：**<http://localhost:8088>**
 
 ## 8. 接口说明
 
@@ -153,14 +150,6 @@ INSERT INTO counter (id, value) VALUES (1, 0) ON CONFLICT (id) DO NOTHING;
 docker compose exec db sh -c 'psql -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT id, value FROM counter;"'
 ```
 
-预期输出：
-
-```
- id | value
-----+-------
-  1 |     0
-(1 row)
-```
 
 ## 10. 数据卷、停止与重新启动
 
