@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>共享计数器</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: #f5f6f8;
+      color: #222;
+    }
+    main { text-align: center; }
+    h1 { font-size: 24px; margin-bottom: 32px; }
+    .row { display: flex; align-items: center; gap: 32px; justify-content: center; }
+    button {
+      width: 56px; height: 56px;
+      font-size: 28px;
+      border: 1px solid #ccc; border-radius: 8px;
+      background: #fff; cursor: pointer;
+    }
+    button:disabled { opacity: .5; cursor: wait; }
+    #value { font-size: 48px; min-width: 120px; font-variant-numeric: tabular-nums; }
+    #error { color: #c62828; min-height: 1.5em; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>共享计数器</h1>
+    <div class="row">
+      <button id="dec" aria-label="减一">−</button>
+      <span id="value">…</span>
+      <button id="inc" aria-label="加一">+</button>
+    </div>
+    <p id="error" role="alert"></p>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
